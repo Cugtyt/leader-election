@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: leaderelection-service
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: leaderelection-service
+  template:
+    metadata:
+      labels:
+        app: leaderelection-service
+    spec:
+      containers:
+      - name: leaderelection-service
+        image: cugtyt/leaderelection:v2
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 5153
