@@ -19,17 +19,10 @@ public class LeaderTask : BackgroundService, ILeaderTask
             this.logger.LogInformation($"{this.leader.GetLeader()} is done");
             await Task.Delay(TimeSpan.FromSeconds(1), cancellationToken);
         }
-        // while(!cancellationToken.IsCancellationRequested)
-        // {
-        //     this.logger.LogInformation("doing work");
-        //     await Task.Delay(TimeSpan.FromSeconds(1));
-        // }
     }
 
     protected override async Task ExecuteAsync(CancellationToken cancellationToken)
     {
-        await this.leader.RunAsLeaderAsync(cancellationToken, Environment.GetEnvironmentVariable("POD_NAME")!, "leader-election", "leader-election-namespace", this);
-        // this.logger.LogInformation("ExecuteAsync");
-        // await RunAsync(cancellationToken);
+        await this.leader.RunAsLeaderAsync(cancellationToken, Environment.GetEnvironmentVariable("POD_NAME")!, "leaderelection", "leaderelection-namespace", this);
     }
 }

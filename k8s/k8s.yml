@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: leader-election-namespace
+  name: leaderelection-namespace
 
 ---
 
@@ -12,7 +12,7 @@ metadata:
   labels:
     app: leaderelection-service
   name: leaderelection-service
-  namespace: leader-election-namespace
+  namespace: leaderelection-namespace
 
 ---
 
@@ -22,7 +22,7 @@ metadata:
   labels:
     app: leaderelection-service
   name: leaderelection-service
-  namespace: leader-election-namespace
+  namespace: leaderelection-namespace
 rules:
   - apiGroups:
       - coordination.k8s.io
@@ -39,7 +39,7 @@ metadata:
   labels:
     app: leaderelection-service
   name: leaderelection-service
-  namespace: leader-election-namespace
+  namespace: leaderelection-namespace
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -54,7 +54,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: leaderelection-service
-  namespace: leader-election-namespace
+  namespace: leaderelection-namespace
 spec:
   replicas: 3
   selector:
@@ -70,7 +70,7 @@ spec:
       serviceAccountName: leaderelection-service
       containers:
       - name: leaderelection-service
-        image: cugtyt/leaderelection:electionv3
+        image: cugtyt/leaderelection:electionv4
         resources:
           limits:
             memory: "128Mi"
