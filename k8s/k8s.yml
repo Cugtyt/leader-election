@@ -1,7 +1,60 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: leader-election-namespace
+
+---
+
+apiVersion: v1
+automountServiceAccountToken: true
+kind: ServiceAccount
+metadata:
+  labels:
+    app: leaderelection-service
+  name: leaderelection-service
+  namespace: leader-election-namespace
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  labels:
+    app: leaderelection-service
+  name: leaderelection-service
+  namespace: leader-election-namespace
+rules:
+  - apiGroups:
+      - coordination.k8s.io
+    resources:
+      - leases
+    verbs:
+      - '*'
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  labels:
+    app: leaderelection-service
+  name: leaderelection-service
+  namespace: leader-election-namespace
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: leaderelection-service
+subjects:
+  - kind: ServiceAccount
+    name: leaderelection-service
+
+---
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: leaderelection-service
+  namespace: leader-election-namespace
 spec:
   replicas: 3
   selector:
@@ -12,12 +65,21 @@ spec:
       labels:
         app: leaderelection-service
     spec:
+      automountServiceAccountToken: true
+      serviceAccount: leaderelection-service
+      serviceAccountName: leaderelection-service
       containers:
       - name: leaderelection-service
-        image: cugtyt/leaderelection:electionv2
+        image: cugtyt/leaderelection:electionv3
         resources:
           limits:
             memory: "128Mi"
             cpu: "500m"
         ports:
         - containerPort: 5153
+        env:
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.name

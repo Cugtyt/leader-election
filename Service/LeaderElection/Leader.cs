@@ -16,8 +16,7 @@ public class Leader
 
     public async Task RunAsLeaderAsync(CancellationToken cancellationToken, string leaderId, string componentName, string componentNamespace, ILeaderTask leaderTask)
     {
-        string leaseName = $"leader-lease-{componentName}";
-        var leaseLock = new LeaseLock(client, leaseName, componentNamespace, leaderId);
+        var leaseLock = new LeaseLock(client, componentNamespace, componentName, leaderId);
         var leaderElectionConfig = new LeaderElectionConfig(leaseLock);
         this.leaderElector = new LeaderElector(leaderElectionConfig);
         this.leaderElector.OnNewLeader += (string identity) =>

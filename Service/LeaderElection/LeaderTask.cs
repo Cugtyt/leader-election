@@ -28,7 +28,7 @@ public class LeaderTask : BackgroundService, ILeaderTask
 
     protected override async Task ExecuteAsync(CancellationToken cancellationToken)
     {
-        await this.leader.RunAsLeaderAsync(cancellationToken, new Random().Next().ToString(), "component-name", "component-namespace", this);
+        await this.leader.RunAsLeaderAsync(cancellationToken, Environment.GetEnvironmentVariable("POD_NAME")!, "leader-election", "leader-election-namespace", this);
         // this.logger.LogInformation("ExecuteAsync");
         // await RunAsync(cancellationToken);
     }
