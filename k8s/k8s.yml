@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: leaderelection-service
-        image: cugtyt/leaderelection:v2
+        image: cugtyt/leaderelection:electionv2
         resources:
           limits:
             memory: "128Mi"
