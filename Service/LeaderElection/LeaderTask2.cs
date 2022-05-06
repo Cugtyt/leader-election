@@ -1,9 +1,9 @@
-public class LeaderTask : BackgroundService, ILeaderTask
+public class LeaderTask2 : MyBackgroundService, ILeaderTask
 {
     private readonly Leader leader;
-    private readonly ILogger<LeaderTask> logger;
+    private readonly ILogger<LeaderTask2> logger;
 
-    public LeaderTask(Leader leader, ILogger<LeaderTask> logger)
+    public LeaderTask2(Leader leader, ILogger<LeaderTask2> logger)
     {
         this.leader = leader;
         this.logger = logger;
@@ -15,7 +15,7 @@ public class LeaderTask : BackgroundService, ILeaderTask
         while (!cancellationToken.IsCancellationRequested && this.leader.IsLeader())
         {
             this.logger.LogInformation($"{this.leader.GetLeader()} is doing work");
-            await Task.Delay(TimeSpan.FromSeconds(5));
+            await Task.Delay(TimeSpan.FromSeconds(3));
             this.logger.LogInformation($"{this.leader.GetLeader()} is done");
         }
     }
