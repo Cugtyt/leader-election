@@ -70,7 +70,7 @@ spec:
       serviceAccountName: leaderelection-service
       containers:
       - name: leaderelection-service
-        image: cugtyt/leaderelection:electionv10-2tasks
+        image: cugtyt/leaderelection:electionv12-4tasks
         resources:
           limits:
             memory: "128Mi"

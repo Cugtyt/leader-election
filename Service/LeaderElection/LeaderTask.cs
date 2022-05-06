@@ -11,7 +11,7 @@ public class LeaderTask : BackgroundService, ILeaderTask
 
     public async Task RunAsync(CancellationToken cancellationToken)
     {
-        this.logger.LogInformation($"{this.leader.GetLeader()} is leader:  {this.leader.IsLeader()}");
+        this.logger.LogInformation($"{this.leader.GetLeader()} is leader: {this.leader.IsLeader()}");
         while (!cancellationToken.IsCancellationRequested && this.leader.IsLeader())
         {
             this.logger.LogInformation($"{this.leader.GetLeader()} is doing work");
@@ -22,6 +22,6 @@ public class LeaderTask : BackgroundService, ILeaderTask
 
     protected override async Task ExecuteAsync(CancellationToken cancellationToken)
     {
-        await this.leader.RunAsLeaderAsync(cancellationToken, Environment.GetEnvironmentVariable("POD_NAME")!, "leaderelection", "leaderelection-namespace", this);
+        await this.leader.RunAsLeaderAsync(cancellationToken, this);
     }
 }
