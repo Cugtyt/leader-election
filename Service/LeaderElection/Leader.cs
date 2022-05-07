@@ -5,41 +5,41 @@ using k8s.LeaderElection.ResourceLock;
 public sealed class Leader
 {
     private readonly ILogger<Leader> logger;
-    private static LeaderElector? leaderElector;
-    private static SemaphoreSlim semaphore = new SemaphoreSlim(1);
+    private LeaderElector leaderElector;
+    private SemaphoreSlim semaphore = new SemaphoreSlim(1);
 
     public Leader(LeaderElector leaderElector, ILogger<Leader> logger)
     {
-        Leader.leaderElector = leaderElector;
+        this.leaderElector = leaderElector;
         this.logger = logger;
     }
 
     public async Task RunAsLeaderAsync(CancellationToken cancellationToken, ILeaderTask leaderTask)
     {
         this.logger.LogInformation("starting leader election");
-        Leader.leaderElector!.OnStartedLeading += async () =>
+        this.leaderElector.OnStartedLeading += async () =>
         {
             await leaderTask.RunAsync(cancellationToken);
         };
 
-        await Leader.semaphore.WaitAsync();
+        await this.semaphore.WaitAsync();
         try
         {
-            await Leader.leaderElector!.RunAsync(cancellationToken);
+            await this.leaderElector.RunAsync(cancellationToken);
         }
         finally
         {
-            Leader.semaphore.Release();
+            this.semaphore.Release();
         }
     }
 
     public bool IsLeader()
     {
-        return Leader.leaderElector!.IsLeader();
+        return this.leaderElector.IsLeader();
     }
 
     public string GetLeader()
     {
-        return Leader.leaderElector!.GetLeader();
+        return this.leaderElector.GetLeader();
     }
 }
