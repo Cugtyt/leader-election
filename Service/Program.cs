@@ -14,6 +14,19 @@ builder.Services.AddSingleton<LeaderElector>(serviceProvider =>
     var leaseLock = new LeaseLock(client, componentNamespace, componentName, leaderId);
     var leaderElectionConfig = new LeaderElectionConfig(leaseLock);
     var leaderElector = new LeaderElector(leaderElectionConfig);
+    var logger = serviceProvider.GetRequiredService<ILoggerFactory>().CreateLogger("LeaderElector");
+    leaderElector.OnNewLeader += (string identity) =>
+    {
+        logger.LogInformation($"{identity} is now the leader, old leader was {leaderId}");
+    };
+    leaderElector.OnStoppedLeading += () =>
+    {
+        logger.LogInformation($"{leaderId} stop leading");
+    };
+    leaderElector.OnStartedLeading += () =>
+    {
+        logger.LogInformation($"{leaderId} start leading");
+    };
     return leaderElector;
 });
 builder.Services.AddSingleton<Leader>();
