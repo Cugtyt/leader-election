@@ -1,4 +1,4 @@
-public class LeaderTask4 : BackgroundService, ILeaderTask
+public class LeaderTask4 : MyBackgroundService, ILeaderTask
 {
     private readonly Leader leader;
     private readonly ILogger<LeaderTask4> logger;

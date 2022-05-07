@@ -3,9 +3,12 @@ using k8s.LeaderElection;
 using k8s.LeaderElection.ResourceLock;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Logging.AddConsole();
+builder.Logging.AddSimpleConsole(options =>
+{
+    options.SingleLine = true;
+});
 builder.Services.AddSingleton<IKubernetes>(serviceProvider => new Kubernetes(KubernetesClientConfiguration.BuildDefaultConfig()));
-builder.Services.AddSingleton<LeaderElector>(serviceProvider => 
+builder.Services.AddSingleton<LeaderElector>(serviceProvider =>
 {
     var leaderId = Environment.GetEnvironmentVariable("POD_NAME")!;
     var componentName = "leaderelection";

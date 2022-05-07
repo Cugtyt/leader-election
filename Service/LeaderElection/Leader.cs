@@ -13,7 +13,7 @@ public sealed class Leader
         this.logger = logger;
     }
 
-    public Task RunAsLeaderAsync(CancellationToken cancellationToken, ILeaderTask leaderTask)
+    public async Task RunAsLeaderAsync(CancellationToken cancellationToken, ILeaderTask leaderTask)
     {
         this.logger.LogInformation("starting leader election");
         this.leaderElector.OnStartedLeading += async () =>
@@ -21,10 +21,7 @@ public sealed class Leader
             await leaderTask.RunAsync(cancellationToken);
         };
 
-        lock (this)
-        {
-            return this.leaderElector.RunAsync(cancellationToken);
-        }
+        await this.leaderElector.RunAsync(cancellationToken);
     }
 
     public bool IsLeader()
